@@ -8,7 +8,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.headerContainer}>
-        <HeroImage />
+        <HeroImage offsetX={-80} imageScale={1.25} />
         <NavBar overlay />
       </View>
       <View style={styles.content}>
