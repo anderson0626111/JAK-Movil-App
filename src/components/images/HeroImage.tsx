@@ -3,7 +3,7 @@
 // y una altura proporcional, mientras mantiene los laterales cubiertos.
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
-import banner from '../../../assets/images/banner.png';
+import banner from '../../assets/images/Logo_Dealer.jpg';
 
 export function HeroImage({ cropMode = 'bottom', cropPercent, offsetX = 0, imageScale = 1.2 }: { cropMode?: 'top' | 'bottom'; cropPercent?: number; offsetX?: number; imageScale?: number } = {}) {
   // Se obtiene el ancho de la ventana para calcular el tamaño del banner.
