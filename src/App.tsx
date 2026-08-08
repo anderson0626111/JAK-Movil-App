@@ -1,43 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { NavBar } from './components/navigation/NavBar';
-import { HeroImage } from './components/images/HeroImage';
+import { FilterPanel } from './components/search/FilterPanel';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.headerContainer}>
-        <HeroImage offsetX={-80} imageScale={1.25} />
-        <NavBar overlay />
+    <ScrollView style={styles.container}>
+      <StatusBar style="light" />
+      
+      {/* 1. Cabecera completa (Logo a la derecha + Menú horizontal) */}
+      <NavBar />
+
+      {/* 2. Sección del buscador/filtro principal */}
+      <View style={styles.heroSection}>
+        <View style={styles.filterWrapper}>
+          <FilterPanel />
+        </View>
       </View>
+
+      {/* 3. Contenido principal */}
       <View style={styles.content}>
-        <Text style={styles.title}>Open up App.tsx to start working on your app!</Text>
+        <Text style={styles.title}>Catálogo de Vehículos Disponibles</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: 0,
+    backgroundColor: '#f8f9fa',
   },
-  headerContainer: {
-    position: 'relative',
+  heroSection: {
     width: '100%',
-    // allow hero to determine its own height (can be full viewport)
+    alignItems: 'center',
+    paddingTop: 20,
+  },
+  filterWrapper: {
+    width: '90%',
+    maxWidth: 1100,
   },
   content: {
-    flex: 1,
+    padding: 24,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
+    fontWeight: 'bold',
     color: '#111827',
-    textAlign: 'center',
+    marginTop: 20,
   },
 });
