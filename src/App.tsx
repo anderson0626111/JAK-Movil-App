@@ -1,27 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { useState } from 'react';
 import { NavBar } from './components/navigation/NavBar';
 import { FilterPanel } from './components/search/FilterPanel';
+import { FinancingPage } from './components/financing';
 
 export default function App() {
+  // Estado para controlar la navegación entre páginas
+  const [currentPage, setCurrentPage] = useState<'home' | 'financing'>('home');
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="light" />
       
       {/* 1. Cabecera completa (Logo a la derecha + Menú horizontal) */}
-      <NavBar />
+      <NavBar onFinancingPress={() => setCurrentPage('financing')} />
 
-      {/* 2. Sección del buscador/filtro principal */}
-      <View style={styles.heroSection}>
-        <View style={styles.filterWrapper}>
-          <FilterPanel />
-        </View>
-      </View>
+      {/* Mostrar página de Financiamientos o página principal */}
+      {currentPage === 'financing' ? (
+        <FinancingPage />
+      ) : (
+        <>
+          {/* 2. Sección del buscador/filtro principal */}
+          <View style={styles.heroSection}>
+            <View style={styles.filterWrapper}>
+              <FilterPanel />
+            </View>
+          </View>
 
-      {/* 3. Contenido principal */}
-      <View style={styles.content}>
-        <Text style={styles.title}>Catálogo de Vehículos Disponibles</Text>
-      </View>
+          {/* 3. Contenido principal */}
+          <View style={styles.content}>
+            <Text style={styles.title}>Catálogo de Vehículos Disponibles</Text>
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 }

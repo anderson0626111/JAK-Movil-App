@@ -24,7 +24,7 @@ export function HeroImage() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 250, // Altura fija de 250px para evitar que el logo ocupe toda la pantalla
+    height: 400, // CAMBIO: Aumentado de 250px a 400px para que el logo sea más grande
     backgroundColor: '#ffffff', // Fondo blanco para integrar el logo
     justifyContent: 'center', // Centra la imagen verticalmente
     alignItems: 'center', // Centra la imagen horizontalmente
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    maxWidth: 600, // Ancho máximo de 600px para que el logo no se distorsione en pantallas 4K/Web
+    maxWidth: 900, // CAMBIO: Aumentado de 600px a 900px para que el logo sea más grande en pantallas
   },
 });
