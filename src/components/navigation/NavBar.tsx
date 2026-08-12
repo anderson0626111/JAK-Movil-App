@@ -56,8 +56,10 @@ export function NavBar({ onFinancingPress }: NavBarProps) {
                 hoveredIndex === index && !item.active && styles.navItemHover, // CAMBIO: Borde rojo solo en hover de botones que NO son INICIO
               ]}
               onPress={item.onPress} // CAMBIO: Ejecuta la función onPress del item
-              onMouseEnter={() => setHoveredIndex(index)} // CAMBIO: Detecta cuando el mouse entra
-              onMouseLeave={() => setHoveredIndex(null)} // CAMBIO: Detecta cuando el mouse sale
+              // @ts-ignore
+              onMouseEnter={() => setHoveredIndex(index)}
+              // @ts-ignore
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <Text style={[styles.navText, item.active && styles.navTextActive]}>
                 {item.title}
@@ -118,6 +120,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    // @ts-ignore
     transition: 'border-color 0.3s ease', // CAMBIO: Transición suave para el borde
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
