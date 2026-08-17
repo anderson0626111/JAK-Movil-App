@@ -1,93 +1,160 @@
-import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { useState } from 'react';
+
+// Importamos los componentes utilizados en la aplicación
 import { NavBar } from './components/navigation/NavBar';
 import { FilterPanel } from './components/search/FilterPanel';
-import { FinancingPage } from './components/financing';
-import { vehicles } from './data/vehicleData';
 import { VehicleCard } from './components/catalog/VehicleCard';
+import { vehicles } from './data/vehicleData';
 import { HeroImage } from './components/images/HeroImage';
-import { Footer } from './components/navigation/Footer';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'financing'>('home');
+  // Estado que controla qué sección se está mostrando.
+  // 'home' = página principal
+  // 'used' = vehículos usados
+  const [currentPage, setCurrentPage] = useState<'home' | 'used'>('home');
+
+  // Cambia la vista hacia Vehículos Usados
+  const handleUsedVehiclesPress = () => {
+    setCurrentPage('used');
+  };
+
+  // Regresa a la página principal
+  const handleHomePress = () => {
+    setCurrentPage('home');
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar style="light" />
-      
-      {/* 1. Logo y Barra Superior */}
-      <NavBar onFinancingPress={() => setCurrentPage('financing')} />
+    <View style={styles.container}>
 
-      {currentPage === 'financing' ? (
-        <FinancingPage />
-      ) : (
-        <>
-          {/* 2. Sección del buscador/filtro */}
-          <View style={styles.heroSection}>
-            <View style={styles.filterWrapper}>
-              <FilterPanel />
-            </View>
-          </View>
+      {/* Barra de navegación.
+          Le pasamos las funciones para controlar las secciones */}
+      <NavBar
+        onUsedVehiclesPress={handleUsedVehiclesPress}
+        onHomePress={handleHomePress}
+      />
 
-          {/* 3. Carrusel automático de vehículos (después del filtro) */}
-          <HeroImage />
+      {/* ScrollView permite desplazarse verticalmente por la página */}
+      <ScrollView>
 
-          {/* 4. Catálogo de Vehículos */}
+        {/* Si la página seleccionada es "used",
+            mostramos solamente los vehículos usados */}
+        {currentPage === 'used' ? (
+
           <View style={styles.content}>
-            <Text style={styles.title}>Catálogo de Vehículos Disponibles</Text>
-            
+
+            {/* Título de la sección de vehículos usados */}
+            <Text style={styles.title}>
+              Vehículos Usados
+            </Text>
+
             <View style={styles.catalogContainer}>
-              {vehicles.map((vehicle) => (
-                <VehicleCard 
-                  key={vehicle.id} 
-                  vehicle={vehicle} 
-                  onPress={() => {
-                    console.log('Vehículo seleccionado:', vehicle.title);
-                  }} 
-                />
-              ))}
+
+              {/* Filtramos los vehículos cuyo estado sea "Usado".
+                  Después creamos una tarjeta para cada vehículo */}
+              {vehicles
+                .filter((vehicle) => vehicle.mileage === 'Usado')
+                .map((vehicle) => (
+                  <VehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    onPress={() => {
+                      // Acción que se ejecuta al seleccionar un vehículo
+                      console.log(
+                        'Vehículo usado seleccionado:',
+                        vehicle.title
+                      );
+                    }}
+                  />
+                ))}
             </View>
           </View>
-        </>
-      )}
 
-      {/* 5. Footer al final de la página */}
-      <Footer />
-    </ScrollView>
+        ) : (
+
+          /* Página principal */
+          <>
+            {/* Sección donde se encuentra el panel de búsqueda/filtros */}
+            <View style={styles.heroSection}>
+              <View style={styles.filterWrapper}>
+                <FilterPanel />
+              </View>
+            </View>
+
+            {/* Imagen principal de la página */}
+            <HeroImage />
+
+            {/* Catálogo principal de vehículos */}
+            <View style={styles.content}>
+
+              <Text style={styles.title}>
+                Catálogo de Vehículos Disponibles
+              </Text>
+
+              <View style={styles.catalogContainer}>
+
+                {/* Mostramos todos los vehículos disponibles */}
+                {vehicles.map((vehicle) => (
+                  <VehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    onPress={() => {
+                      // Acción que se ejecuta al seleccionar un vehículo
+                      console.log(
+                        'Vehículo seleccionado:',
+                        vehicle.title
+                      );
+                    }}
+                  />
+                ))}
+
+              </View>
+            </View>
+          </>
+        )}
+
+      </ScrollView>
+    </View>
   );
 }
 
+// Estilos principales de la aplicación
 const styles = StyleSheet.create({
+
+  // Contenedor principal
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#fff',
   },
+
+  // Sección principal del encabezado/filtros
   heroSection: {
     width: '100%',
-    alignItems: 'center',
-    paddingTop: 20,
   },
+
+  // Contenedor del panel de filtros
   filterWrapper: {
-    width: '90%',
-    maxWidth: 1100,
+    width: '100%',
   },
+
+  // Contenido general de las páginas
   content: {
-    padding: 24,
-    alignItems: 'center',
+    padding: 20,
   },
+
+  // Título de las secciones
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
-    marginTop: 20,
     marginBottom: 20,
   },
+
+  // Contenedor de las tarjetas de vehículos.
+  // flexWrap permite que las tarjetas pasen a otra fila.
   catalogContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: 20,
     justifyContent: 'center',
-    width: '100%',
-    maxWidth: 1200,
   },
 });

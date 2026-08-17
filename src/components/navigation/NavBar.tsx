@@ -1,107 +1,197 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-// Importamos el logo de Rosybel Auto Sales
+// Logo principal de Rosybel Auto Sales
 import logo from '../../assets/images/Logo_Dealer.jpg';
 
+// Propiedades que recibe la barra de navegación desde App.tsx
 interface NavBarProps {
+  // Función para Financiamiento
   onFinancingPress?: () => void;
+
+  // Función para mostrar los vehículos usados
+  onUsedVehiclesPress?: () => void;
+
+  // Función para regresar a la página principal
+  onHomePress?: () => void;
 }
 
-export function NavBar({ onFinancingPress }: NavBarProps) {
-  // CAMBIO: Estado para rastrear el hover de los botones de navegación
+// Componente de la barra de navegación
+export function NavBar({
+  onFinancingPress,
+  onUsedVehiclesPress,
+  onHomePress,
+}: NavBarProps) {
+
+  // Guarda el índice del botón sobre el que está el mouse.
+  // Se utiliza para aplicar el efecto hover en la versión web.
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  // Elementos que aparecen en la barra de navegación
   const menuItems = [
-    { title: 'INICIO', active: true, onPress: () => window.location.href = '/' },
-    { title: 'VEHÍCULOS NUEVOS', active: false, onPress: () => {} },
-    { title: 'VEHÍCULOS USADOS', active: false, onPress: () => {} },
-    { title: 'FINANCIAMIENTOS Y SEGUROS', active: false, onPress: onFinancingPress }, // CAMBIO: Conectado con la navegación
-    { title: 'CALCULAR PRESTAMO', active: false, onPress: () => {} },
-    { title: 'NOSOTROS', active: false, onPress: () => {} },
-    { title: 'CONTACTO', active: false, onPress: () => {} },
+    {
+      // Regresa al catálogo principal
+      title: 'INICIO',
+      active: true,
+      onPress: onHomePress,
+    },
+
+    {
+      // Sección de vehículos nuevos
+      title: 'VEHÍCULOS NUEVOS',
+      active: false,
+      onPress: () => {},
+    },
+
+    {
+      // Sección de vehículos usados.
+      // La función viene desde App.tsx.
+      title: 'VEHÍCULOS USADOS',
+      active: false,
+      onPress: onUsedVehiclesPress,
+    },
+
+    {
+      // Sección para calcular préstamo
+      title: 'CALCULAR PRÉSTAMO',
+      active: false,
+      onPress: onFinancingPress,
+    },
+
+    {
+      // Sección informativa de la empresa
+      title: 'NOSOTROS',
+      active: false,
+      onPress: () => {},
+    },
+
+    {
+      // Sección de contacto
+      title: 'CONTACTO',
+      active: false,
+      onPress: () => {},
+    },
   ];
 
-  // CAMBIO: Función para redirigir al inicio cuando se presione el logo del dealer
-  // Al hacer clic en el logo, se redirige a la página principal
+  // Al presionar el logo regresamos al inicio
   const handleLogoPress = () => {
-    window.location.href = '/'; // Redirige a la página de inicio
+    onHomePress?.();
   };
 
   return (
     <View style={styles.headerContainer}>
-      {/* 1. Cabecera superior con fondo blanco */}
+
+      {/* Cabecera superior que contiene el logo */}
       <View style={styles.topHeader}>
-        {/* CAMBIO: Logo ahora es clickeable con TouchableOpacity */}
-        <TouchableOpacity 
+
+        {/* Logo de la empresa.
+            También funciona como botón para regresar al inicio */}
+        <TouchableOpacity
           style={styles.logoWrapper}
-          onPress={handleLogoPress} // Ejecuta handleLogoPress al hacer clic
-          activeOpacity={0.8} // Efecto visual de opacidad al presionar
+          onPress={handleLogoPress}
+          activeOpacity={0.8}
         >
-          <Image source={logo} style={styles.logoImage} resizeMode="contain" />
+          <Image
+            source={logo}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
 
       </View>
 
-      {/* 2. Barra de navegación horizontal */}
+      {/* Barra horizontal de navegación */}
       <View style={styles.navBar}>
-        {/* CAMBIO: Botones de navegación con efecto hover - cambian de color al pasar el mouse */}
+
         <View style={styles.menuContainer}>
+
+          {/* Recorremos todos los elementos del menú */}
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={index}
+
+              // Aplicamos los estilos dependiendo
+              // de si el botón está activo o tiene hover
               style={[
                 styles.navItem,
+
+                // Estilo del botón activo
                 item.active && styles.navItemActive,
-                hoveredIndex === index && !item.active && styles.navItemHover, // CAMBIO: Borde rojo solo en hover de botones que NO son INICIO
+
+                // Estilo cuando el mouse pasa por encima
+                hoveredIndex === index &&
+                  !item.active &&
+                  styles.navItemHover,
               ]}
-              onPress={item.onPress} // CAMBIO: Ejecuta la función onPress del item
+
+              // Ejecuta la función correspondiente al botón
+              onPress={item.onPress}
+
+              // Detecta cuando el mouse entra al botón
               // @ts-ignore
               onMouseEnter={() => setHoveredIndex(index)}
+
+              // Detecta cuando el mouse sale del botón
               // @ts-ignore
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <Text style={[styles.navText, item.active && styles.navTextActive]}>
+
+              {/* Texto del botón */}
+              <Text
+                style={[
+                  styles.navText,
+                  item.active && styles.navTextActive,
+                ]}
+              >
                 {item.title}
               </Text>
+
             </TouchableOpacity>
           ))}
+
         </View>
       </View>
     </View>
   );
 }
 
-// CAMBIO: Estilos con soporte para hover en botones de navegación
-// El efecto hover se logra con onMouseEnter/onMouseLeave y la propiedad hoveredIndex
-// Cuando se pasa el mouse sobre un botón, el fondo cambia a gris (#4a4a4a)
+// Estilos de la barra de navegación
 const styles = StyleSheet.create({
+
+  // Contenedor general del encabezado
   headerContainer: {
     width: '100%',
     backgroundColor: '#ffffff',
   },
+
+  // Área donde se encuentra el logo
   topHeader: {
     flexDirection: 'row',
-    justifyContent: 'center', // CAMBIO: Centrado del logo en el medio de la página
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 0,
     paddingVertical: 0,
   },
- logoWrapper: {
+
+  // Contenedor del logo
+  logoWrapper: {
     height: 100,
     width: 320,
     justifyContent: 'center',
-    alignItems: 'center', // CAMBIO: Centrado horizontal del logo
-    marginLeft: 0, // CAMBIO: Removido margen negativo para centralizar
-    cursor: 'pointer', // CAMBIO: Indicar que el logo es clickeable - muestra mano al pasar sobre él
+    alignItems: 'center',
+    marginLeft: 0,
+
+    // Cursor de mano en la versión web
+    cursor: 'pointer',
   },
+
+  // Imagen del logo
   logoImage: {
     width: '100%',
     height: '100%',
   },
-  emptySpace: {
-    flex: 1,
-  },
+
+  // Barra de navegación
   navBar: {
     backgroundColor: '#262626',
     borderTopWidth: 1,
@@ -109,36 +199,52 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+
+  // Contenedor de los botones
   menuContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     maxWidth: 1200,
     width: '100%',
   },
+
+  // Estilo individual de cada botón
   navItem: {
     paddingVertical: 14,
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
+
+    // Transición del borde para el hover
     // @ts-ignore
-    transition: 'border-color 0.3s ease', // CAMBIO: Transición suave para el borde
+    transition: 'border-color 0.3s ease',
+
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
   },
+
+  // Estilo del botón activo
   navItemActive: {
     backgroundColor: '#d32f2f',
   },
+
+  // Estilo cuando el mouse pasa sobre el botón
   navItemHover: {
-    // CAMBIO: Contorno rojo en hover para botones que NO son INICIO
-    borderBottomColor: '#d32f2f', // Borde rojo en hover
+    borderBottomColor: '#d32f2f',
   },
+
+  // Texto de los botones
   navText: {
     color: '#ffffff',
     fontSize: 13,
     fontWeight: 'bold',
     letterSpacing: 0.5,
-    transition: 'color 0.3s ease', // CAMBIO: Transición suave para el color en hover
+
+    // Transición del color del texto
+    transition: 'color 0.3s ease',
   },
+
+  // Texto del botón activo
   navTextActive: {
     color: '#ffffff',
   },
