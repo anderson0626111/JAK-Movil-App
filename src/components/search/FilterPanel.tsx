@@ -1,70 +1,90 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; // O el selector que estés usando (select de React Native Web / Picker)
 
 export function FilterPanel() {
-  const [marca, setMarca] = useState('');
-  const [modelo, setModelo] = useState('');
-  const [anio, setAnio] = useState('');
-  const [precioMax, setPrecioMax] = useState('');
+  const [brand, setBrand] = useState('');
+  const [model, setModel] = useState('');
+  const [yearFrom, setYearFrom] = useState('');
+  const [yearTo, setYearTo] = useState('');
+
+  // Generamos un arreglo de años (por ejemplo desde 2000 hasta el año actual)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1999 }, (_, i) => currentYear - i);
 
   const handleSearch = () => {
-    // Aquí conectaremos la lógica para filtrar los vehículos en la BD
-    console.log('Filtrando vehículos por:', { marca, modelo, anio, precioMax });
+    console.log('Filtros aplicados:', { brand, model, yearFrom, yearTo });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Encuentra tu Vehículo</Text>
+      <Text style={styles.headerTitle}>Encuentra tu Vehículo</Text>
 
       <View style={styles.filterRow}>
-        {/* Selector de Marca */}
+        {/* Marca */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Marca</Text>
-          <select 
-            value={marca} 
-            onChange={(e) => setMarca(e.target.value)} 
-            style={webStyles.select}
-          >
-            <option value="">Todas las marcas</option>
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="hyundai">Hyundai</option>
-            <option value="kia">Kia</option>
-            <option value="nissan">Nissan</option>
-          </select>
+          <Text style={styles.label}>MARCA</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={brand}
+              onValueChange={(itemValue) => setBrand(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Todas las marcas" value="" />
+              <Picker.Item label="Toyota" value="toyota" />
+              <Picker.Item label="Honda" value="honda" />
+              <Picker.Item label="Hyundai" value="hyundai" />
+              <Picker.Item label="Kia" value="kia" />
+            </Picker>
+          </View>
         </View>
 
-        {/* Selector de Modelo */}
+        {/* Modelo */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Modelo</Text>
-          <select 
-            value={modelo} 
-            onChange={(e) => setModelo(e.target.value)} 
-            style={webStyles.select}
-          >
-            <option value="">Todos los modelos</option>
-            <option value="corolla">Corolla</option>
-            <option value="civic">Civic</option>
-            <option value="tucson">Tucson</option>
-            <option value="k5">K5</option>
-          </select>
+          <Text style={styles.label}>MODELO</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={model}
+              onValueChange={(itemValue) => setModel(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Todos los modelos" value="" />
+            </Picker>
+          </View>
         </View>
 
-        {/* Selector de Año */}
+        {/* Año Desde */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Año Desde</Text>
-          <select 
-            value={anio} 
-            onChange={(e) => setAnio(e.target.value)} 
-            style={webStyles.select}
-          >
-            <option value="">Cualquier año</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
-            <option value="2020">2020</option>
-          </select>
+          <Text style={styles.label}>AÑO DESDE</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={yearFrom}
+              onValueChange={(itemValue) => setYearFrom(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Cualquier año" value="" />
+              {years.map((yr) => (
+                <Picker.Item key={`from-${yr}`} label={yr.toString()} value={yr.toString()} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+
+        {/* Año Hasta (NUEVO) */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>AÑO HASTA</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={yearTo}
+              onValueChange={(itemValue) => setYearTo(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Cualquier año" value="" />
+              {years.map((yr) => (
+                <Picker.Item key={`to-${yr}`} label={yr.toString()} value={yr.toString()} />
+              ))}
+            </Picker>
+          </View>
         </View>
 
         {/* Botón Buscar */}
@@ -76,60 +96,59 @@ export function FilterPanel() {
   );
 }
 
-// Estilos web directos para los campos tipo select
-const webStyles = {
-  select: {
-    padding: '10px',
-    borderRadius: '6px',
-    border: '1px solid #ccc',
-    backgroundColor: '#fff',
-    fontSize: '14px',
-    width: '100%',
-  },
-};
-
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
-    marginVertical: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    borderRadius: 12,
+    padding: 20,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)', // Para web / iOS
+    elevation: 3, // Para Android
+    width: '100%',
   },
-  title: {
-    fontSize: 20,
+  headerTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#1a1a1a',
+    color: '#111827',
+    marginBottom: 16,
   },
   filterRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
     alignItems: 'flex-end',
+    gap: 12,
   },
   inputGroup: {
     flex: 1,
-    minWidth: 150,
+    minWidth: 160,
   },
   label: {
     fontSize: 12,
     fontWeight: '600',
-    marginBottom: 5,
-    color: '#666',
+    color: '#6b7280',
+    marginBottom: 6,
     textTransform: 'uppercase',
   },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 42,
+    width: '100%',
+    color: '#1f2937',
+    borderWidth: 0,
+  },
   button: {
-    backgroundColor: '#d32f2f', // Rojo similar al branding de dealers
-    paddingVertical: 12,
+    backgroundColor: '#dc2626',
     paddingHorizontal: 20,
-    borderRadius: 6,
+    height: 44,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    minWidth: 160,
+    minWidth: 180,
   },
   buttonText: {
     color: '#ffffff',

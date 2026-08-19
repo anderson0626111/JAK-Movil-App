@@ -3,37 +3,46 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { NavBar } from './components/navigation/NavBar';
 import { FilterPanel } from './components/search/FilterPanel';
-import { FinancingPage } from './components/financing';
 import { vehicles } from './data/vehicleData';
 import { VehicleCard } from './components/catalog/VehicleCard';
 import { HeroImage } from './components/images/HeroImage';
 import { Footer } from './components/navigation/Footer';
+import { ContactPage } from './components/Contact/ContactPage';
+import { AboutPage } from './components/about/AboutPage';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'financing'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'contact'>('home');
 
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="light" />
       
       {/* 1. Logo y Barra Superior */}
-      <NavBar onFinancingPress={() => setCurrentPage('financing')} />
+      <NavBar 
+        activePage={currentPage}
+        onHomePress={() => setCurrentPage('home')}
+        onAboutPress={() => setCurrentPage('about')}
+        onContactPress={() => setCurrentPage('contact')}
+      />
 
-      {currentPage === 'financing' ? (
-        <FinancingPage />
+      {/* 2. Vistas según la página seleccionada */}
+      {currentPage === 'contact' ? (
+        <ContactPage />
+      ) : currentPage === 'about' ? (
+        <AboutPage />
       ) : (
         <>
-          {/* 2. Sección del buscador/filtro */}
+          {/* 3. Sección del buscador/filtro */}
           <View style={styles.heroSection}>
             <View style={styles.filterWrapper}>
               <FilterPanel />
             </View>
           </View>
 
-          {/* 3. Carrusel automático de vehículos (después del filtro) */}
+          {/* 4. Carrusel automático de vehículos */}
           <HeroImage />
 
-          {/* 4. Catálogo de Vehículos */}
+          {/* 5. Catálogo de Vehículos */}
           <View style={styles.content}>
             <Text style={styles.title}>Catálogo de Vehículos Disponibles</Text>
             
@@ -52,8 +61,13 @@ export default function App() {
         </>
       )}
 
-      {/* 5. Footer al final de la página */}
-      <Footer />
+      {/* 6. Footer al final de la página */}
+      <Footer 
+        onHomePress={() => setCurrentPage('home')}
+        onContactPress={() => setCurrentPage('contact')}
+        onCatalogPress={() => setCurrentPage('home')}
+        onAboutPress={() => setCurrentPage('about')}
+      />
     </ScrollView>
   );
 }

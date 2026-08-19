@@ -1,7 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 
-export function Footer() {
+interface FooterProps {
+  onHomePress?: () => void;
+  onContactPress?: () => void;
+  onCatalogPress?: () => void;
+  onAboutPress?: () => void;
+}
+
+export function Footer({
+  onHomePress,
+  onContactPress,
+  onCatalogPress,
+  onAboutPress,
+}: FooterProps) {
   const handleOpenLink = (url: string) => {
     Linking.openURL(url).catch((err) => console.error("Error al abrir enlace: ", err));
   };
@@ -21,16 +33,16 @@ export function Footer() {
         {/* Sección 2: Enlaces Rápidos */}
         <View style={styles.linksSection}>
           <Text style={styles.sectionTitle}>Navegación</Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={onHomePress}>
             <Text style={styles.linkText}>Inicio</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={onCatalogPress}>
             <Text style={styles.linkText}>Catálogo de Vehículos</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={onAboutPress}>
             <Text style={styles.linkText}>Sobre Nosotros</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={onContactPress}>
             <Text style={styles.linkText}>Contacto</Text>
           </TouchableOpacity>
         </View>
@@ -38,9 +50,9 @@ export function Footer() {
         {/* Sección 3: Contacto & Info */}
         <View style={styles.contactSection}>
           <Text style={styles.sectionTitle}>Contacto</Text>
-          <Text style={styles.contactText}> C/ Almirante #14 Veron Punta Cana, Republica Dominicana</Text>
-          <Text style={styles.contactText}> +1 (809) 000-0000</Text>
-          <Text style={styles.contactText}> info@jakmovil.com</Text>
+          <Text style={styles.contactText}> C/ Almirante #14 Veron, Punta Cana, Republica Dominicana</Text>
+          <Text style={styles.contactText}> +1 (809) 474-8410</Text>
+          <Text style={styles.contactText}> contacto@rosybelautosales.com</Text>
         </View>
 
       </View>
